@@ -25,15 +25,23 @@ public class ContactsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        
+        pedirPermiso();
+
+        inflarObjetos();
+
+        initView();
+    }
+
+    private void pedirPermiso(){
         if(ContextCompat.checkSelfPermission(this,Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED){
             if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)){
                 Toast.makeText(this, "Mostrar contactos", Toast.LENGTH_LONG).show();
             }
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_CONTACTS},READ_CONTACTS_PERMISSION_CODE);
         }
+    }
 
-
-        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_CONTACTS},READ_CONTACTS_PERMISSION_CODE);
+    private void inflarObjetos(){
         listContacts = (ListView) findViewById(R.id.listContacts);
         mProjection = new String[]{
                 ContactsContract.Profile._ID,
@@ -41,7 +49,6 @@ public class ContactsActivity extends AppCompatActivity {
         };
         mContactsAdapter = new ContactsAdapter(this, null, 0);
         listContacts.setAdapter(mContactsAdapter);
-        initView();
     }
 
     public void initView(){
